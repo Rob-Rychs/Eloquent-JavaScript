@@ -38,7 +38,10 @@
             script.src = file
             box.win.document.body.appendChild(script)
             return new Promise(done => script.addEventListener("load", done))
-          })).then(() => done(box))
+          })).then(() => {
+            if (box.notify.onLoad) box.notify.onLoad()
+            done(box)
+          })
         }
       })
     }
@@ -47,6 +50,8 @@
       this.startedAt = null
       this.extraSecs = 2
       this.output = null
+      this.handleDeps = true
+      this.notify = {}
 
       this.callbacks = {}
       // Used to cancel existing events when new code is loaded
@@ -73,19 +78,24 @@
       this.win.addEventListener("mousedown", scheduleResize)
     }
 
-    run(code, output) {
+    run(code, output, meta) {
       if (output) this.output = output
       this.startedAt = Date.now()
       this.extraSecs = 2
       this.win.__c = 0
       this.prepare(code)
-        .then(code => code instanceof Function ? code() : this.win.eval(code))
+        .then(code => {
+          if (code instanceof Function) return code()
+          let value = this.win.eval(code)
+          if (this.notify.onRun) this.notify.onRun(code, meta)
+          return value
+        })
         .catch(err => this.error(err))
     }
 
     prepare(text) {
       let {code, dependencies} = preprocess(text, this)
-      return Promise.all(dependencies.map(dep => this.loaded.compute(dep))).then(() => code)
+      return (this.handleDeps ? Promise.all(dependencies.map(dep => this.loaded.compute(dep))) : Promise.resolve([])).then(() => code)
     }
 
     evalModule(name, code) {
@@ -215,7 +225,10 @@
         return val
       }
 
+      win.addEventListener("unhandledrejection", e => this.error(e.reason))
+
       win.require = name => this.require(name)
+      win.require.preload = (name, code) => resolved.store(name, {name, code})
       win.module = {exports: {}}
       win.exports = win.module.exports
     }
@@ -356,8 +369,11 @@
         if (tryPos == 0) tryPos = stat.start
         catchPos = stat.end
       }
-      if (stat.type == "VariableDeclaration" && stat.kind != "var")
+      if (stat.type == "VariableDeclaration" && stat.kind != "var") {
+        let found = findAssignmentsTo(stat.declarations, ast)
+        if (found) patches.push({from: 0, text: `throw new TypeError("invalid assignment to const '${found}'");`})
         patches.push({from: stat.start, to: stat.start + stat.kind.length, text: "var"})
+      }
       if (stat.type == "ClassDeclaration")
         patches.push({from: stat.start, text: "var " + stat.id.name + " = "})
     }
@@ -374,6 +390,27 @@
     out += code.slice(pos, code.length)
     out += "\n//# sourceURL=code" + randomID()
     return {code: (strict ? '"use strict";' : "") + out, dependencies}
+  }
+
+  function findAssignmentsTo(decls, ast) {
+    let found = null
+    for (let i = 0; i < decls.length; i++)
+      acorn.walk.simple(decls[i].id, {
+        VariablePattern(node) { if (findAssignments(node.name, ast)) found = node.name }
+      }, null, null, "Pattern")
+    return found
+  }
+
+  function findAssignments(name, ast) {
+    let found = false
+    acorn.walk.ancestor(ast, {
+      AssignmentExpression(node, ancestors) {
+        if (node.left.type != "Identifier" || node.left.name != name) return
+        for (let i = 2; i < ancestors.length; i++) if (/Statement|Declaration/.test(ancestors[i].type)) return
+        found = true
+      }
+    })
+    return found
   }
 
   function detectSourceType(code) {
@@ -432,7 +469,7 @@
   }
 
   // Cache for loaded code and resolved unpkg redirects
-  const resolved = window.resolved = new Cached(name => fetch("https://unpkg.com/" + name.replace(/\/$/, "")).then(resp => {
+  const resolved = new Cached(name => fetch("https://unpkg.com/" + name.replace(/\/$/, "")).then(resp => {
     if (resp.status >= 400) throw new Error(`Failed to resolve package '${name}'`)
     let found = resp.url.replace(/.*unpkg\.com\//, "")
     let known = resolved.get(found)

@@ -1,4 +1,4 @@
-{{meta {chap_num: 5, prev_link: 04_data, next_link: 06_object, load_files: ["code/scripts.js", "code/chapter/05_higher_order.js", "code/intro.js"], zip: "node/html"}}}
+{{meta {load_files: ["code/scripts.js", "code/chapter/05_higher_order.js", "code/intro.js"], zip: "node/html"}}}
 
 # Higher-Order Functions
 
@@ -165,7 +165,7 @@ But what if we want to do something other than logging the numbers?
 Since "doing something" can be represented as a function and functions
 are just values, we can pass our action as a function value.
 
-```
+```{includeCode: "top_lines: 5"}
 function repeat(n, action) {
   for (let i = 0; i < n; i++) {
     action(i);
@@ -281,7 +281,7 @@ order to process data, we'll need some data. This chapter will use a
 ((data set)) about ((writing system))s—such as Latin, Cyrillic, and
 Arabic.
 
-Remember ((Unicode)) from [Chapter 1](01_values.html#unicode), the
+Remember ((Unicode)) from [Chapter ?](values#unicode), the
 system that assigns a number to each character in written language.
 Most of these characters are associated with a script. The standard
 contains 140 different scripts. 81 of those are still in use today.
@@ -522,8 +522,7 @@ longer but still quite easy to understand.
 
 Higher-order functions start to shine when you need to _compose_
 operations. As an example, let's write code that finds the average
-year of origin for left-to-right and right-to-left scripts in the data
-set.
+year of origin for living and dead scripts in the data set.
 
 ```
 function average(array) {
@@ -609,7 +608,7 @@ the elements in the array.
 
 But how do we get the character codes in a string?
 
-In [Chapter 1](01_values.html) I mentioned that JavaScript ((string))s
+In [Chapter ?](values) I mentioned that JavaScript ((string))s
 are encoded as a sequence of 16-bit number called _((code unit))s_. A
 ((Unicode)) ((character)) code was initially supposed to fit within
 such a unit (which gives you a little over 65 thousand characters).
@@ -662,7 +661,7 @@ charcter takes up one or two code units.
 
 {{index "for/of loop", character}}
 
-In the [previous chapter](04_data.html#for_of_loop), I mentioned that
+In the [previous chapter](data#for_of_loop), I mentioned that
 a `for`/`of` loop can also be used on strings. Like `codePointAt`,
 this type of loop was introduced at a time where people were acutely
 aware of the problems with UTF-16. And when you use it to loop over a
@@ -808,6 +807,9 @@ the test function on the current loop value, and stops if that returns
 false. Then, it calls the body function, giving it the current value.
 And finally, it calls the update function to create a new value, and
 starts from the beginning.
+
+When defining the function, you may use a regular loop to do the
+actual looping.
 
 {{if interactive
 

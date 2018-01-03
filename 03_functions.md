@@ -1,5 +1,3 @@
-{{meta {chap_num: 3, prev_link: 02_program_structure, next_link: 04_data}}}
-
 # Functions
 
 {{quote {author: "Donald Knuth", chapter: true}
@@ -250,9 +248,8 @@ if (safeMode) {
 
 {{index [function, "higher-order"]}}
 
-In [Chapter 5](05_higher_order.html#higher_order), we will discuss the
-wonderful things that can be done by passing around function values to
-other functions.
+In [Chapter ?](higher_order), we will discuss the wonderful things
+that can be done by passing around function values to other functions.
 
 ## Declaration notation
 
@@ -344,7 +341,7 @@ const horn = () => {
 Arrow functions are a relatively recent addition to the language, and
 their main use is to allow simple function expressions to be less
 verbose. We'll be using a lot of them in [Chapter
-5](05_higher_order.html).
+?](higher_order).
 
 {{id stack}}
 ## The call stack
@@ -493,7 +490,7 @@ console.log(power(2, 6));
 
 {{index "console.log"}}
 
-In the [next chapter](04_data.html#rest_parameters), we will see a way
+In the [next chapter](data#rest_parameters), we will see a way
 in which a function body can get at the whole list of arguments it was
 passed. This is helpful because it makes it possible for a function to
 accept any number of arguments. For example, `console.log` makes use
@@ -620,7 +617,7 @@ machine-friendliness. Almost any program can be made faster by making
 it bigger and more convoluted. The programmer must decide on an
 appropriate balance.
 
-In the case of the [earlier](03_functions.html#power) `power`
+In the case of the [earlier](functions#power) `power`
 function, the inelegant (looping) version is still fairly simple and
 easy to read. It doesn't make much sense to replace it with the
 recursive version. Often, though, a program deals with such complex
@@ -637,7 +634,7 @@ can be paralyzing.
 {{index "premature optimization"}}
 
 Therefore, always start by writing something that's correct and easy
-to understand. If you're worried that it's too slow—which is usually
+to understand. If you're worried that it's too slow—which it usually
 isn't, since most code simply isn't executed often enough to take any
 significant amount of time—you can measure afterwards, and improve it
 if necessary.
@@ -970,7 +967,7 @@ the way that chapters and sections help organize a text.
 
 {{index "Math object", "minimum (exercise)", "Math.min function", minimum}}
 
-The [previous chapter](02_program_structure.html#return_values)
+The [previous chapter](program_structure#return_values)
 introduced the standard function `Math.min` that returns its smallest
 argument. We can do that ourselves now. Write a function `min` that
 takes two arguments and returns their minimum.
@@ -1046,7 +1043,7 @@ if}}
 
 Your function will likely look somewhat similar to the inner `find`
 function in the recursive `findSolution`
-[example](03_functions.html#recursive_puzzle) in this chapter, with an
+[example](functions#recursive_puzzle) in this chapter, with an
 `if`/`else if`/`else` chain that tests which of the three cases
 applies. The final `else`, corresponding to the third case, makes the
 recursive call. Each of the branches should contain a `return`

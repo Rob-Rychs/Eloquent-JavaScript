@@ -1,5 +1,3 @@
-{{meta {chap_num: 9, prev_link: 08_error, next_link: 10_modules}}}
-
 # Regular Expressions
 
 {{quote {author: "Jamie Zawinski", chapter: true}
@@ -46,7 +44,7 @@ expressions will make you a more effective programmer.
 
 ## Creating a regular expression
 
-{{index ["regular expression", creation], "RegExp constructor", "literal expression", "slash character"}}
+{{index ["regular expression", creation], "RegExp class", "literal expression", "slash character"}}
 
 A regular expression is a type of object. It can either be constructed
 with the `RegExp` constructor or written as a literal value by
@@ -60,7 +58,7 @@ let re2 = /abc/;
 Both of these regular expression objects represent the same
 ((pattern)): an _a_ character followed by a _b_ followed by a _c_.
 
-{{index "backslash character", "RegExp constructor"}}
+{{index "backslash character", "RegExp class"}}
 
 When using the `RegExp` constructor, the pattern is written as a
 normal string, so the usual rules apply for backslashes.
@@ -174,7 +172,7 @@ console.log(dateTime.test("30-jan-2003 15:20"));
 That looks completely awful, doesn't it? Half of it is backslashes,
 producing a background noise that makes it hard to spot the actual
 ((pattern)) expressed. We'll see a slightly improved version of this
-expression [later](09_regexp.html#date_regexp_counted).
+expression [later](regexp#date_regexp_counted).
 
 {{index [escaping, "in regexps"], "regular expression", set}}
 
@@ -372,7 +370,7 @@ store date and ((time)) values in JavaScript.
 
 ## The date type
 
-{{index constructor, "Date constructor"}}
+{{index constructor, "Date class"}}
 
 JavaScript has a standard object type for representing ((date))s—or
 rather, points in ((time)). It is called `Date`. If you simply create
@@ -383,7 +381,7 @@ console.log(new Date());
 // → Mon Nov 13 2017 16:19:11 GMT+0100 (CET)
 ```
 
-{{index "Date constructor"}}
+{{index "Date class"}}
 
 You can also create an object for a specific time.
 
@@ -418,7 +416,7 @@ console.log(new Date(1387407600000));
 // → Thu Dec 19 2013 00:00:00 GMT+0100 (CET)
 ```
 
-{{index "Date.now function", "Date constructor"}}
+{{index "Date.now function", "Date class"}}
 
 If you give the `Date` constructor a single argument, that argument is
 treated as such a millisecond count. You can get the current
@@ -814,7 +812,7 @@ nongreedy variant first.
 
 ## Dynamically creating RegExp objects
 
-{{index ["regular expression", creation], "underscore character", "RegExp constructor"}}
+{{index ["regular expression", creation], "underscore character", "RegExp class"}}
 
 There are cases where you might not know the exact ((pattern)) you
 need to match against when you are writing your code. Say you want to
@@ -1001,7 +999,7 @@ perform the match at the start of each iteration, save its result in a
 {{id ini}}
 ## Parsing an INI file
 
-{{index comment, "file format", "enemies example", "ini file"}}
+{{index comment, "file format", "enemies example", "INI file"}}
 
 To conclude the chapter, we'll look at a problem that calls for
 ((regular expression))s. Imagine we are writing a program to
@@ -1050,7 +1048,7 @@ top.
 
 Since the format has to be processed ((line)) by line, splitting up
 the file into separate lines is a good start. We used
-`string.split("\n")` to do this in [Chapter 6](06_object.html#split).
+`string.split("\n")` to do this in [Chapter ?](object#split).
 Some operating systems, however, use not just a newline character to
 separate lines but a carriage return character followed by a newline
 (`"\r\n"`). Given that the `split` method also allows a regular
@@ -1143,9 +1141,9 @@ whitespace, including things like the ((nonbreaking space)) and the
 ((Mongolian vowel separator)).
 
 Another problem is that, by default, regular expressions work on code
-units, as discussed in [Chapter 5](05_higher_order.html#code_units),
-not actual characters. This means that characters that are composed of
-two code units behave strangely.
+units, as discussed in [Chapter ?](higher_order#code_units), not
+actual characters. This means that characters that are composed of two
+code units behave strangely.
 
 ```
 console.log(/🍎{3}/.test("🍎🍎🍎"));
@@ -1270,9 +1268,8 @@ make it any smaller.
  6. A word longer than six letters
  7. A word without the letter _e_
 
-Refer to the table in the [chapter
-summary](09_regexp.html#summary_regexp) for help. Test each solution
-with a few test strings.
+Refer to the table in the [chapter summary](regexp#summary_regexp) for
+help. Test each solution with a few test strings.
 
 {{if interactive
 ```

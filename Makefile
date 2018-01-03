@@ -1,12 +1,9 @@
-CHAPTERS := 00_intro 01_values 02_program_structure 03_functions 04_data 05_higher_order 06_object \
-  07_robot 08_error 09_regexp 10_modules 11_language 12_browser 13_dom 14_event 15_game 16_canvas \
-  17_http 18_forms 19_paint 20_node 21_skillsharing
+CHAPTERS := $(basename $(shell ls [0-9][0-9]_*.md) .md)
 
 SVGS := $(wildcard img/*.svg)
 
 html: $(foreach CHAP,$(CHAPTERS),html/$(CHAP).html) html/js/acorn_codemirror.js \
-      code/skillsharing.zip code/solutions/20_4_a_public_space_on_the_web.zip html/js/chapter_info.js \
-      $(patsubst img/%.svg,img/generated/%.png,$(SVGS))
+      code/skillsharing.zip code/solutions/20_4_a_public_space_on_the_web.zip html/js/chapter_info.js
 
 html/%.html: %.md
 	node src/render_html.js $< > $@
@@ -24,12 +21,6 @@ html/js/acorn_codemirror.js: node_modules/codemirror/lib/codemirror.js \
 	                     node_modules/acorn/dist/acorn.js \
 	                     node_modules/acorn/dist/walk.js
 	node_modules/.bin/uglifyjs $? -m -o $@
-
-img/generated/%.png: img/%.svg
-	inkscape --export-png=$@ $<
-
-img/generated/%.pdf: img/%.svg
-	inkscape --export-pdf=$@ $<
 
 code/skillsharing.zip: html/21_skillsharing.html
 	rm -f $@

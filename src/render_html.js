@@ -7,11 +7,18 @@ require("codemirror/mode/xml/xml.js")
 require("codemirror/mode/css/css.js")
 require("codemirror/mode/htmlmixed/htmlmixed.js")
 
-let {tokens, metadata} = transformTokens(require("./markdown").parse(fs.readFileSync(process.argv[2], "utf8"), {}), {
+let file = process.argv[2]
+
+let {tokens, metadata} = transformTokens(require("./markdown").parse(fs.readFileSync(file, "utf8"), {}), {
   defined: ["interactive", "html"],
   ids: true,
   index: false
 })
+
+let chapters = fs.readdirSync(__dirname + "/..")
+    .filter(file => /^\d{2}_\w+\.md$/.test(file))
+    .sort()
+    .map(file => /^\d{2}_(\w+)\.md$/.exec(file)[1])
 
 function escapeChar(ch) {
   return ch == "<" ? "&lt;" : ch == ">" ? "&gt;" : ch == "&" ? "&amp;" : "&quot;"
@@ -36,17 +43,23 @@ function attrs(token) {
   return token.attrs ? token.attrs.map(([name, val]) => ` ${name}="${escape(String(val))}"`).join("") : ""
 }
 
+let linkedChapter = null
+
 let renderer = {
   fence(token) {
     let config = /\S/.test(token.info) ? PJSON.parse(token.info) : {}
     let lang = config.lang || "javascript"
-    return `\n\n<pre${attrs(token)} class="snippet cm-s-default" data-language=${lang} ${config.focus ? " data-focus=true" : ""}${config.sandbox ? ` data-sandbox="${config.sandbox}"` : ""}>${anchor(token)}${highlight(lang, token.content.trim())}</pre>`
+    return `\n\n<pre${attrs(token)} class="snippet cm-s-default" data-language=${lang} ${config.focus ? " data-focus=true" : ""}${config.sandbox ? ` data-sandbox="${config.sandbox}"` : ""}${config.meta ? ` data-meta="${config.meta}"` : ""}>${anchor(token)}${highlight(lang, token.content.trim())}</pre>`
   },
 
   hardbreak() { return "<br>" },
   softbreak() { return " " },
 
-  text(token) { return escape(token.content) },
+  text(token) {
+    let {content} = token
+    if (linkedChapter != null) content = content.replace(/\?/g, linkedChapter)
+    return escape(content)
+  },
 
   paragraph_open(token) { return `\n\n<p${attrs(token)}>${anchor(token)}` },
   paragraph_close() { return "</p>" },
@@ -90,9 +103,15 @@ let renderer = {
 
   link_open(token) {
     let alt = token.attrGet("alt"), href= token.attrGet("href")
+    let maybeChapter = /^(\w+)(#.*)?$/.exec(href)
+    if (maybeChapter && chapters.includes(maybeChapter[1])) {
+      let n = chapters.indexOf(maybeChapter[1])
+      href = pad(n) + "_" + maybeChapter[1] + ".html" + (maybeChapter[2] || "")
+      linkedChapter = n
+    }
     return `<a href="${escape(href)}"${alt ? ` alt="${escape(alt)}"` : ""}>`
   },
-  link_close() { return "</a>" },
+  link_close() { linkedChapter = null; return "</a>" },
 
   inline(token) { return renderArray(token.children) },
 
@@ -116,13 +135,23 @@ function renderArray(tokens) {
   let result = ""
   for (let i = 0; i < tokens.length; i++) {
     let token = tokens[i], f = renderer[token.type]
-    if (!f) throw new Error("No render function for " + token.type + " " + tokens.slice(i + 1).map(t => t.type).join())
+    if (!f) throw new Error("No render function for " + token.type)
     result += f(token)
   }
   return result
 }
 
+function pad(n) {
+  return (n < 10 ? "0" : "") + n
+}
+
 metadata.content = renderArray(tokens)
+let chapter = /^\d{2}_([^\.]+)/.exec(file), index
+if (chapter && (index = chapters.indexOf(chapter[1])) > -1) {
+  metadata.chap_num = index
+  if (index > 0) metadata.prev_link = `${pad(index - 1)}_${chapters[index - 1]}`
+  if (index < chapters.length - 1) metadata.next_link = `${pad(index + 1)}_${chapters[index + 1]}`
+}
 
 let template = mold.bake("chapter", fs.readFileSync(__dirname + "/chapter.html", "utf8"))
 

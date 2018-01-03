@@ -1,4 +1,4 @@
-{{meta {chap_num: 4, prev_link: 03_functions, next_link: 05_higher_order, load_files: ["code/jacques_journal.js", "code/chapter/04_data.js"], zip: "node/html"}}}
+{{meta {load_files: ["code/jacques_journal.js", "code/chapter/04_data.js"], zip: "node/html"}}}
 
 # Data Structures: Objects and Arrays
 
@@ -208,7 +208,7 @@ uppercase. There is also `toLowerCase`, going the other way.
 Interestingly, even though the call to `toUpperCase` does not pass any
 arguments, the function somehow has access to the string `"Doh"`, the
 value whose property we called. How this works is described in
-[Chapter 6](06_object.html#obj_methods).
+[Chapter ?](object#obj_methods).
 
 Properties that contain functions are generally called _methods_ of
 the value they belong to. As in, “_toUpperCase_ is a method of a
@@ -242,7 +242,7 @@ a _((stack))_. A stack, in programming, is a ((data structure)) that
 allows you to push values into it and pop them out again in the
 opposite order—the thing that was added last is removed first. These
 are common in programming—you might remember the function ((call
-stack)) from [the previous chapter](03_functions.html#stack), which is
+stack)) from [the previous chapter](functions#stack), which is
 an instance of the same idea.
 
 ## Objects
@@ -359,6 +359,16 @@ console.log(Object.keys({x: 0, y: 0, z: 2}));
 // → ["x", "y", "z"]
 ```
 
+You can use `Object.assign` to copy the properties from one object
+into another.
+
+```
+let objectA = {a: 1, b: 2};
+Object.assign(objectA, {b: 3, c: 4});
+console.log(objectA);
+// → {a: 1, b: 3, c: 4}
+```
+
 {{index array, collection}}
 
 Arrays, then, are just a kind of object specialized for storing
@@ -445,9 +455,8 @@ only if both objects are precisely the same value. Comparing different
 objects will return `false`, even if they have identical contents.
 There is no “deep” comparison operation built into JavaScript, which
 looks at object's contents, but it is possible to write it yourself
-(which will be one of the
-[exercises](04_data.html#exercise_deep_compare) at the end of this
-chapter).
+(which will be one of the [exercises](data#exercise_deep_compare) at
+the end of this chapter).
 
 ## The lycanthrope's log
 
@@ -696,7 +705,7 @@ When a `for` loops looks like this, with the word `of` after a
 variable definition, it will loop over the elements of the value given
 after `of`. This works not only for arrays, but also for strings and
 some other data structures. We'll discuss _how_ it works in [Chapter
-6](06_object.html).
+?](object).
 
 {{id analysis}}
 
@@ -814,7 +823,7 @@ generally useful array methods.
 {{index "push method", "pop method", "shift method", "unshift method"}}
 
 We saw `push` and `pop`, which add and remove elements at the
-end of an array, [earlier](04_data.html#array_methods) in this
+end of an array, [earlier](data#array_methods) in this
 chapter. The corresponding methods for adding and removing things at
 the start of an array are called `unshift` and `shift`.
 
@@ -947,12 +956,23 @@ console.log("  okay \n ".trim());
 // → okay
 ```
 
+{{index "repeat method"}}
+
+A string can be repeated with the `repeat` method, which creates a new
+string containing multiple copies of the original string, glued
+together.
+
+```
+console.log("LA".repeat(3));
+// → LALALA
+```
+
 {{index ["length property", "for string"], [string, indexing]}}
 
 We have already seen the string type's `length` property. Accessing
 the individual characters in a string looks like accessing array
 elements (with a caveat that we'll discuss in [Chapter
-5](05_higher_order.html#code_units)).
+?](higher_order#code_units)).
 
 ```
 let string = "abc";
@@ -1075,7 +1095,7 @@ console.log(randomPointOnCircle(2));
 
 If sines and cosines are not something you are very familiar with,
 don't worry. When they are used in this book, in [Chapter
-13](13_dom.html#sin_cos), I'll explain them.
+?](dom#sin_cos), I'll explain them.
 
 {{index "Math.random function", "random number"}}
 
@@ -1268,8 +1288,8 @@ You can iterate over arrays using a special kind of `for` loop—`for
 
 {{index "summing (exercise)"}}
 
-The [introduction](00_intro.html) of this book alluded to the
-following as a nice way to compute the sum of a range of numbers:
+The [introduction](intro) of this book alluded to the following as a
+nice way to compute the sum of a range of numbers:
 
 ```{test: no}
 console.log(sum(range(1, 10)));
@@ -1359,7 +1379,7 @@ Neither may use the standard `reverse` method.
 {{index efficiency, "pure function", "side effect"}}
 
 Thinking back to the notes about side effects and pure functions in
-the [previous chapter](03_functions.html#pure), which variant do you
+the [previous chapter](functions#pure), which variant do you
 expect to be useful in more situations? Which one is more efficient?
 
 {{if interactive
@@ -1563,7 +1583,7 @@ compare properties only when _both_ arguments are objects. In all
 other cases you can just immediately return the result of applying
 `===`.
 
-{{index "Object.keys method"}}
+{{index "Object.keys function"}}
 
 Use `Object.keys` to go over the properties. You need to test whether
 both objects have the same set of property names and whether those

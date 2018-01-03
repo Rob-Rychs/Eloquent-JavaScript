@@ -1,4 +1,4 @@
-{{meta {chap_num: 6, prev_link: 05_higher_order, next_link: 07_robot, load_files: ["code/chapter/06_object.js"], zip: "node/html"}}}
+{{meta {load_files: ["code/chapter/06_object.js"], zip: "node/html"}}}
 
 # The Secret Life of Objects
 
@@ -12,7 +12,7 @@ quote}}
 
 {{index "Liskov, Barbara", "abstract data type"}}
 
-[Chapter 4](04_data.html) introduced ((object))s. In programming
+[Chapter ?](data) introduced ((object))s. In programming
 culture, there is a thing called _((object-oriented programming))_.
 Object-oriented programming provides a bunch of ideas about how
 objects can be used to help manage the ((complexity)) of programs.
@@ -556,7 +556,7 @@ it expects.
 
 {{index "for/of loop", "iterator interface"}}
 
-I mentioned in [Chapter 4](04_data.html#for_of_loop) that a `for`/`of`
+I mentioned in [Chapter ?](data#for_of_loop) that a `for`/`of`
 loop can loop over several kinds of data structures. This is another
 case of polymorphism—such loops expect the data structure to expose a
 specific interface, which arrays and strings do. And you can also add
@@ -1052,7 +1052,7 @@ hint}}
 {{index "list (exercise)", interface, iterator, "static method", "List class"}}
 
 Rewrite the list data structure from the exercises in [Chapter
-4](04_data.html#list) as a ((class)). Give `List` objects their old
+?](data#list) as a ((class)). Give `List` objects their old
 `value` and `rest` properties, but also a `toArray` method and a
 `length` getter that returns the length of the list. Make `fromArray`
 a static method on the `List` constructor.
@@ -1104,6 +1104,8 @@ hint}}
 ### List iteration
 
 {{index "list (exercise)", interface, "iterator interface"}}
+
+{{id list_iterator}}
 
 Make the `List` class from the previous exercise iterable. Refer back
 to the section about the iterator interface earlier in the chapter if
